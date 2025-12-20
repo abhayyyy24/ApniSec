@@ -1,0 +1,80 @@
+// Prisma Client Generator
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Database Configuration
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+// Enums
+
+enum IssueType {
+  CLOUD_SECURITY
+  REDTEAM_ASSESSMENT
+  VAPT
+}
+
+enum IssueStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum IssuePriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+
+// User Model
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash String
+
+  firstName     String?
+  lastName      String?
+
+  isActive      Boolean  @default(true)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  issues        Issue[]
+
+  @@map("users")
+}
+
+
+// Issue Model
+
+model Issue {
+  id          String        @id @default(uuid())
+
+  type        IssueType
+  title       String
+  description String
+
+  status      IssueStatus  @default(OPEN)
+  priority    IssuePriority?
+
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([type])
+  @@map("issues")
+}
