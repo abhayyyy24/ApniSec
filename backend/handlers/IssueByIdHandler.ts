@@ -6,7 +6,7 @@ import { RateLimitMiddleware } from '../middlewares/RateLimitMiddleware';
 
 export class IssueByIdHandler extends BaseHandler {
   private service: IssueService;
-
+  
   constructor() {
     super();
     this.service = new IssueService();
@@ -20,7 +20,7 @@ export class IssueByIdHandler extends BaseHandler {
     if (rate) return rate;
 
     try {
-      const userId = AuthMiddleware.authenticate(req);
+      const userId = await AuthMiddleware.authenticate();
 
       const { id: issueId } = await ctx.params;
 
