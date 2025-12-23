@@ -17,30 +17,23 @@ export class ProfileHandler extends BaseHandler {
     if (rate) return rate;
 
     try {
-      // ✅ await added
-      const userId = await AuthMiddleware.authenticate(req);
+      
+      const userId = await AuthMiddleware.authenticate();
 
       if (req.method === 'GET') {
         const profile = await this.profileService.getProfile(userId);
         return this.ok(profile);
       }
 
-      // ✅ PATCH + PUT supported
-      if (req.method === 'PUT' || req.method === 'PATCH') {
+      if (req.method === 'PUT') {
         const body = await req.json();
-
         const updated = await this.profileService.updateProfile(userId, body);
-
-        return this.ok({
-          email: updated.email,
-          firstName: updated.firstName,
-          lastName: updated.lastName,
-        });
+        return this.ok(updated);
       }
 
       return this.fail('Method not allowed', 405);
-    } catch (error: any) {
-      return this.fail(error.message ?? 'Bad Request', 400);
+    } catch (e: any) {
+      return this.fail(e.message, 400);
     }
   }
 }
