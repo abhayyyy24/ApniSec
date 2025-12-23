@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { ProfileHandler } from '@/backend/handlers/ProfileHandler';
-
+export const runtime = 'nodejs';
 const handler = new ProfileHandler();
 
 export async function GET(req: NextRequest) {

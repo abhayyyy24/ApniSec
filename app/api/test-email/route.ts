@@ -1,4 +1,3 @@
-// app/api/test-email/route.ts
 import { EmailService } from '@/backend/emails/EmailService';
 
 export const runtime = 'nodejs';

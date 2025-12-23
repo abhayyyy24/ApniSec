@@ -15,16 +15,16 @@ export class AuthService {
     firstName?: string;
     lastName?: string;
   }) {
-    // 1️⃣ Check existing user
+    console.log('Runtime:', process.env.NEXT_RUNTIME);
     const existingUser = await this.userRepo.findByEmail(input.email);
     if (existingUser) {
       throw new Error('User already exists');
     }
 
-    // 2️⃣ Hash password
+    
     const passwordHash = await PasswordUtil.hash(input.password);
 
-    // 3️⃣ Create user
+    
     const user = await this.userRepo.createUser({
       email: input.email,
       passwordHash,
@@ -32,10 +32,10 @@ export class AuthService {
       lastName: input.lastName,
     });
 
-    // 4️⃣ Generate token
+    
     const token = JwtUtil.sign({ userId: user.id });
 
-    // 5️⃣ Return SAFE + USEFUL data
+    
     return {
       user: {
         id: user.id,
