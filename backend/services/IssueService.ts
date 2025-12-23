@@ -18,7 +18,7 @@ export class IssueService {
       title: input.title,
       description: input.description,
       priority: input.priority,
-      status: input.status,
+      status: 'OPEN',
     });
   }
 

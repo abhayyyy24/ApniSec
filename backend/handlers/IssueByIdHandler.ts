@@ -12,13 +12,17 @@ export class IssueByIdHandler extends BaseHandler {
     this.service = new IssueService();
   }
 
-  async handle(req: NextRequest, ctx: { params: { id: string } }) {
+  async handle(
+    req: NextRequest,
+    ctx: { params: Promise<{ id: string }> }
+  ) {
     const rate = RateLimitMiddleware.check(req);
     if (rate) return rate;
 
     try {
       const userId = AuthMiddleware.authenticate(req);
-      const issueId = ctx.params.id;
+
+      const { id: issueId } = await ctx.params;
 
       if (req.method === 'GET') {
         return this.ok(await this.service.getIssue(userId, issueId));

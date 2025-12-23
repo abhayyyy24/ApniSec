@@ -17,16 +17,20 @@ export class ProfileHandler extends BaseHandler {
     if (rate) return rate;
 
     try {
-      const userId = AuthMiddleware.authenticate(req);
+      // ✅ await added
+      const userId = await AuthMiddleware.authenticate(req);
 
       if (req.method === 'GET') {
         const profile = await this.profileService.getProfile(userId);
         return this.ok(profile);
       }
 
-      if (req.method === 'PUT') {
+      // ✅ PATCH + PUT supported
+      if (req.method === 'PUT' || req.method === 'PATCH') {
         const body = await req.json();
+
         const updated = await this.profileService.updateProfile(userId, body);
+
         return this.ok({
           email: updated.email,
           firstName: updated.firstName,
@@ -36,7 +40,7 @@ export class ProfileHandler extends BaseHandler {
 
       return this.fail('Method not allowed', 405);
     } catch (error: any) {
-      return this.fail(error.message, 400);
+      return this.fail(error.message ?? 'Bad Request', 400);
     }
   }
 }

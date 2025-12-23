@@ -8,6 +8,29 @@ const limiter = new RateLimiter({
 
 export class RateLimitMiddleware {
   static check(req: NextRequest): NextResponse | null {
-    return limiter.handle(req);
+    //  diabled limit in dev
+    if (process.env.NODE_ENV === 'development') {
+      return null;
+    }
+
+    //limit write operations
+    if (!['POST', 'PATCH', 'DELETE'].includes(req.method)) {
+      return null;
+    }
+
+    const response = limiter.handle(req);
+
+    //error
+    if (response) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Too many requests. Please slow down.',
+        },
+        { status: 429 }
+      );
+    }
+
+    return null;
   }
 }

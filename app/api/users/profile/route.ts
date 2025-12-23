@@ -7,6 +7,6 @@ export async function GET(req: NextRequest) {
   return handler.handle(req);
 }
 
-export async function PUT(req: NextRequest) {
+export async function PATCH(req: NextRequest) {
   return handler.handle(req);
 }

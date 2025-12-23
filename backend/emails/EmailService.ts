@@ -3,20 +3,29 @@ import { EmailTemplates } from './templates';
 
 export class EmailService {
   private resend: Resend;
-  private fromEmail = 'ApniSec <no-reply@apnisec.com>';
+  private fromEmail = 'ApniSec <onboarding@resend.dev>';
 
   constructor() {
+    console.log('RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
     this.resend = new Resend(process.env.RESEND_API_KEY);
   }
 
   async sendWelcomeEmail(to: string, name?: string) {
-    await this.resend.emails.send({
-      from: this.fromEmail,
+  try {
+    const res = await this.resend.emails.send({
+      from: 'ApniSec <onboarding@resend.dev>',
       to,
       subject: 'Welcome to ApniSec',
       html: EmailTemplates.welcomeEmail(name),
     });
+
+    console.log('RESEND RESPONSE:', res);
+  } catch (err) {
+    console.error('RESEND ERROR:', err);
+    throw err;
   }
+}
+
 
   async sendIssueCreatedEmail(
     to: string,

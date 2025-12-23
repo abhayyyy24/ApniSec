@@ -13,8 +13,8 @@ export class MeHandler extends BaseHandler {
 
   async handle(req: NextRequest) {
     try {
-      const userId = AuthMiddleware.authenticate(req);
-      const user = await this.authService.getCurrentUser(userId);
+       const userId = await AuthMiddleware.authenticate();
+    const user = await this.authService.getCurrentUser(userId);
       return this.ok(user);
     } catch (error: any) {
       return this.fail(error.message, 401);

@@ -1,17 +1,16 @@
-import { NextRequest } from 'next/server';
+import { cookies } from 'next/headers';
 import { JwtUtil } from '../utils/JwtUtils';
 
 export class AuthMiddleware {
-  static authenticate(req: NextRequest): string {
-    const authHeader = req.headers.get('authorization');
+  static async authenticate(): Promise<string> {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('access_token')?.value;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
       throw new Error('Unauthorized');
     }
 
-    const token = authHeader.split(' ')[1];
     const payload = JwtUtil.verify(token);
-
     return payload.userId as string;
   }
 }

@@ -18,11 +18,15 @@ export class IssueHandler extends BaseHandler {
     if (rate) return rate;
 
     try {
-      const userId = AuthMiddleware.authenticate(req);
+      // ✅ FIX: await + no req argument
+      const userId = await AuthMiddleware.authenticate();
 
       if (req.method === 'GET') {
         const type = req.nextUrl.searchParams.get('type') as IssueType | null;
-        const issues = await this.service.listIssues(userId, type || undefined);
+        const issues = await this.service.listIssues(
+          userId,
+          type || undefined
+        );
         return this.ok(issues);
       }
 
