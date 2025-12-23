@@ -13,32 +13,32 @@ export class LoginHandler extends BaseHandler {
   }
 
   async handle(req: NextRequest) {
-    const rateLimitResponse = RateLimitMiddleware.check(req);
-    if (rateLimitResponse) return rateLimitResponse;
+    const rate = RateLimitMiddleware.check(req);
+    if (rate) return rate;
 
     try {
       const body = await req.json();
+      const { email, password } = body;
 
-      // 1️⃣ Authenticate user
-      const token = await this.authService.login(
-        body.email,
-        body.password
-      );
+      
+      const result = await this.authService.login(email, password);
 
-      // 2️⃣ SET COOKIE HERE (CRITICAL FIX)
+  
+      const { token, user } = result;
+
+      
       const cookieStore = await cookies();
       cookieStore.set('access_token', token, {
         httpOnly: true,
-        path: '/', // 🚨 THIS fixes your redirect issue
+        path: '/',
         sameSite: 'lax',
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 60 * 60 * 24 * 7,
+        maxAge: 60 * 60 * 24 * 7, // 7 days
       });
 
-      // 3️⃣ Return success response
-      return this.ok({ success: true });
-    } catch (error: any) {
-      return this.fail(error.message, 401);
+      return this.ok({ user });
+    } catch (e: any) {
+      return this.fail(e.message, 400);
     }
   }
 }
