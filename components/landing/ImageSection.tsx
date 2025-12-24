@@ -8,8 +8,8 @@ export default function ImageSection() {
         border-b border-zinc-200
         h-[32vh]
         lg:h-[80vh]
-        md:h-[45vh]
-        sm:h-[25vh]
+        md:h-[30vh]
+        sm:h-[12vh]
         mb-10
       "
     >
@@ -31,34 +31,41 @@ export default function ImageSection() {
           "
         />
 
-        {/* Foreground image — bottom stuck, horizontally centered */}
+        {/* Foreground SVG */}
         <div
           className="
             absolute bottom-0 left-1/2
             -translate-x-1/2
             z-10
             flex justify-center
-            pb-4 sm:pb-6 lg:pb-8
+            pb-0 sm:pb-0 lg:pb-8
           "
         >
           <Image
-            src="/hero.png"
-            alt="Foreground"
-            width={1800}
-            height={1100}
-            priority
-            className="
-              w-full
-              max-w-[80%]
-              lg:max-w-[85%]
-              md:max-w-[90%]
-              sm:max-w-[95%]
-              rounded-2xl
-              shadow-2xl
-              scale-200
-            "
-          />
+  src="/dashboard.svg"
+  alt="Hero illustration"
+  width={1800}
+  height={1100}
+  priority
+  className="
+  w-full
+  max-w-[120%]
+  scale-[1.5]
+  sm:max-w-[130%]
+  md:max-w-[130%]
+  lg:max-w-[130%]
+  xl:max-w-[120%]
+  2xl:max-w-[160%]
+  drop-shadow-2xl
+  lg:scale-[1.5]
+  xl:scale-[1.5]
+  2xl:scale-[1.5]
+  transition-transform
+"
+/>
+
         </div>
+
       </div>
     </section>
   );
