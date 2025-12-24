@@ -26,7 +26,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
 
     try {
       const res = await fetch('/api/users/profile', {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
